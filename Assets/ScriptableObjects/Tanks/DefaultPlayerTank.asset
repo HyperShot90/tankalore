@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 439124c61d13e2b49aee948bbdadccbe, type: 3}
+  m_Name: DefaultPlayerTank
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  armor: 5
+  firepower: 25
+  movementSpeed: 5
+  rotationSpeed: 180
+  fireRate: 1
+  bulletSpeed: 10
+  range: 10
+  tankSprite: {fileID: 0}
+  tankName: Player Tank
+  healthMultiplier: 1
+  armorMultiplier: 1
+  firepowerMultiplier: 1
+  speedMultiplier: 1
+  fireRateMultiplier: 1
