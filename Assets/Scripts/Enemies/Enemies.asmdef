@@ -1,0 +1,16 @@
+{
+    "name": "Enemies",
+    "rootNamespace": "Tankalore.Enemies",
+    "references": [
+        "Systems"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

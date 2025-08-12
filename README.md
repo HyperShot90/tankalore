@@ -140,5 +140,3 @@ Create the following ScriptableObjects in their respective folders:
 - Built with Unity 2022 LTS
 - Uses Universal Render Pipeline (URP)
 
-## License
-This project structure and code are provided as a learning resource. Feel free to use and modify for your own projects.

@@ -188,7 +188,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (direction != Vector2.zero)
         {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-            transform.rotation = Quaternion.AngleTowards(
+            transform.rotation = Quaternion.RotateTowards(
                 transform.rotation,
                 Quaternion.Euler(0, 0, angle),
                 180f * Time.deltaTime

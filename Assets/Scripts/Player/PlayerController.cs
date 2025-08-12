@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     [Header("Tank Configuration")]
     [SerializeField] private TankStats tankStats;
@@ -67,9 +67,9 @@ public class PlayerController : MonoBehaviour
         if (aimDirection != Vector2.zero)
         {
             float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg - 90f;
-            transform.rotation = Quaternion.AngleTowards(
+            transform.rotation = Quaternion.RotateTowards(
                 transform.rotation,
-                Quaternion.AngleToAxis(Vector3.forward, angle),
+                Quaternion.AngleAxis(angle, Vector3.forward),
                 tankStats.rotationSpeed * Time.deltaTime
             );
         }
