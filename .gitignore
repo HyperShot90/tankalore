@@ -140,6 +140,9 @@ Temporary Items
 # VS Code
 .vscode/
 
+# Plastic SCM
+.plastic/
+
 # Emacs
 \#*\#
 /.emacs.desktop
