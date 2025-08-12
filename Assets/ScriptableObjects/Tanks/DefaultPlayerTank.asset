@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439124c61d13e2b49aee948bbdadccbe, type: 3}
   m_Name: DefaultPlayerTank
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  armor: 5
-  firepower: 25
-  movementSpeed: 5
-  rotationSpeed: 180
-  fireRate: 1
-  bulletSpeed: 10
-  range: 10
+  maxHealth: 120
+  armor: 8
+  firepower: 30
+  movementSpeed: 6
+  rotationSpeed: 200
+  fireRate: 1.2
+  bulletSpeed: 12
+  range: 12
   tankSprite: {fileID: 0}
   tankName: Player Tank
   healthMultiplier: 1

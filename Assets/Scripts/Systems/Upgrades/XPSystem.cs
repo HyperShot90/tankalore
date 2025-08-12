@@ -3,8 +3,8 @@ using UnityEngine;
 public class XPSystem : MonoBehaviour
 {
     [Header("XP Configuration")]
-    [SerializeField] private int baseXPRequired = 100;
-    [SerializeField] private float xpScaling = 1.2f;
+    [SerializeField] private int baseXPRequired = 80;
+    [SerializeField] private float xpScaling = 1.15f;
     [SerializeField] private int maxLevel = 50;
     
     // Current state

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: FastEnemy
   m_EditorClassIdentifier: 
   enemyName: Fast Tank
-  maxHealth: 30
-  damage: 12
-  movementSpeed: 6
-  detectionRange: 10
-  attackRange: 5
-  fireRate: 0.8
-  bulletSpeed: 12
+  maxHealth: 35
+  damage: 14
+  movementSpeed: 7
+  detectionRange: 11
+  attackRange: 6
+  fireRate: 1.0
+  bulletSpeed: 14
   bulletPrefab: {fileID: 0}
   enemyType: 1
   aggroRange: 12

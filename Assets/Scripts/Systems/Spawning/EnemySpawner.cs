@@ -4,16 +4,22 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Spawning Configuration")]
+    [SerializeField] private List<EnemyData> enemyDataList = new List<EnemyData>();
     [SerializeField] private List<GameObject> enemyPrefabs = new List<GameObject>();
     [SerializeField] private List<GameObject> bossPrefabs = new List<GameObject>();
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnRadius = 15f;
     
+    [Header("Difficulty Scaling")]
+    [SerializeField] private AnimationCurve spawnCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 3f);
+    [SerializeField] private float difficultyMultiplier = 1f;
+    [SerializeField] private float maxDifficultyTime = 900f; // Match session duration
+    
     [Header("Wave Configuration")]
-    [SerializeField] private int baseEnemiesPerWave = 5;
-    [SerializeField] private float waveScaling = 1.2f;
-    [SerializeField] private float timeBetweenWaves = 10f;
-    [SerializeField] private float timeBetweenSpawns = 1f;
+    [SerializeField] private int baseEnemiesPerWave = 4;
+    [SerializeField] private float waveScaling = 1.15f;
+    [SerializeField] private float timeBetweenWaves = 8f;
+    [SerializeField] private float timeBetweenSpawns = 0.8f;
     
     [Header("Boss Configuration")]
     [SerializeField] private int wavesBetweenBosses = 5;
@@ -50,8 +56,23 @@ public class EnemySpawner : MonoBehaviour
         
         sessionManager = FindObjectOfType<SessionManager>();
         
+        // Subscribe to session manager events
+        if (sessionManager != null)
+        {
+            sessionManager.OnTimeChanged += UpdateDifficultyScaling;
+        }
+        
         // Start first wave after a delay
         nextWaveTime = Time.time + 3f;
+    }
+    
+    private void OnDestroy()
+    {
+        // Unsubscribe from session manager events
+        if (sessionManager != null)
+        {
+            sessionManager.OnTimeChanged -= UpdateDifficultyScaling;
+        }
     }
     
     private void Update()
@@ -264,5 +285,23 @@ public class EnemySpawner : MonoBehaviour
     {
         isSpawningWave = false;
         isBossActive = false;
+    }
+    
+    private void UpdateDifficultyScaling(float currentTime, float totalTime)
+    {
+        if (maxDifficultyTime <= 0) return;
+        
+        // Calculate difficulty progression based on session time
+        float normalizedTime = Mathf.Clamp01(currentTime / maxDifficultyTime);
+        difficultyMultiplier = spawnCurve.Evaluate(normalizedTime);
+        
+        // Apply difficulty scaling to spawn rates and enemy counts
+        float scaledTimeBetweenSpawns = timeBetweenSpawns / difficultyMultiplier;
+        timeBetweenSpawns = Mathf.Max(scaledTimeBetweenSpawns, 0.2f); // Min spawn time
+    }
+    
+    public float GetCurrentDifficulty()
+    {
+        return difficultyMultiplier;
     }
 }

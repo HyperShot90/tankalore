@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: BasicEnemy
   m_EditorClassIdentifier: 
   enemyName: Basic Tank
-  maxHealth: 50
-  damage: 15
-  movementSpeed: 3
-  detectionRange: 8
-  attackRange: 6
-  fireRate: 0.5
-  bulletSpeed: 8
+  maxHealth: 45
+  damage: 18
+  movementSpeed: 3.5
+  detectionRange: 9
+  attackRange: 7
+  fireRate: 0.6
+  bulletSpeed: 9
   bulletPrefab: {fileID: 0}
   enemyType: 0
   aggroRange: 10

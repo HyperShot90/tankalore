@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: HeavyEnemy
   m_EditorClassIdentifier: 
   enemyName: Heavy Tank
-  maxHealth: 100
-  damage: 30
-  movementSpeed: 1.5
-  detectionRange: 6
-  attackRange: 8
-  fireRate: 0.3
-  bulletSpeed: 6
+  maxHealth: 90
+  damage: 35
+  movementSpeed: 2.0
+  detectionRange: 7
+  attackRange: 9
+  fireRate: 0.4
+  bulletSpeed: 7
   bulletPrefab: {fileID: 0}
   enemyType: 2
   aggroRange: 8

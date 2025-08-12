@@ -83,6 +83,14 @@ public class CurrencyManager : MonoBehaviour
         totalCurrency = PlayerPrefs.GetInt("TotalCurrency", 0);
     }
     
+    public void SetTotalCurrency(int amount)
+    {
+        totalCurrency = amount;
+        OnTotalCurrencyChanged?.Invoke(totalCurrency);
+        SaveCurrency();
+        Debug.Log($"Currency set to: {totalCurrency}");
+    }
+    
     private void SaveCurrency()
     {
         PlayerPrefs.SetInt("TotalCurrency", totalCurrency);
@@ -116,6 +124,19 @@ public class CurrencyManager : MonoBehaviour
         SaveCurrency();
         
         Debug.Log("All currency reset!");
+    }
+    
+    public void ResetPermanentUpgrades()
+    {
+        // Reset all permanent upgrade levels
+        foreach (PermanentUpgradeType upgradeType in System.Enum.GetValues(typeof(PermanentUpgradeType)))
+        {
+            string key = $"PermanentUpgrade_{upgradeType}";
+            PlayerPrefs.DeleteKey(key);
+        }
+        
+        PlayerPrefs.Save();
+        Debug.Log("All permanent upgrades reset!");
     }
     
     private void OnApplicationPause(bool pauseStatus)

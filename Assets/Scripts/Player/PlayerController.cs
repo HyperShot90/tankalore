@@ -80,8 +80,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         Vector2 force = moveInput * tankStats.GetEffectiveMovementSpeed();
         rb.AddForce(force, ForceMode2D.Force);
         
-        // Apply drag to prevent sliding
-        rb.drag = 5f;
+        // Apply drag to prevent sliding - tuned for better control
+        rb.drag = 8f;
     }
     
     private void HandleShooting()

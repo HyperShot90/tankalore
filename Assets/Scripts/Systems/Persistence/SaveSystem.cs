@@ -105,14 +105,26 @@ public class SaveSystem : MonoBehaviour
     
     private MetaProgressionData GetMetaProgressionData()
     {
-        // Placeholder for meta progression system
-        return new MetaProgressionData
+        var metaData = new MetaProgressionData
         {
-            permanentUpgrades = new System.Collections.Generic.List<string>(),
+            permanentUpgradeLevels = new System.Collections.Generic.Dictionary<string, int>(),
             unlockedTanks = new System.Collections.Generic.List<string> { "BasicTank" },
             totalGamesPlayed = PlayerPrefs.GetInt("TotalGamesPlayed", 0),
             bestSurvivalTime = PlayerPrefs.GetFloat("BestSurvivalTime", 0f)
         };
+        
+        // Load permanent upgrade levels from PlayerPrefs (for backwards compatibility)
+        foreach (PermanentUpgradeType upgradeType in System.Enum.GetValues(typeof(PermanentUpgradeType)))
+        {
+            string key = $"PermanentUpgrade_{upgradeType}";
+            int level = PlayerPrefs.GetInt(key, 0);
+            if (level > 0)
+            {
+                metaData.permanentUpgradeLevels[upgradeType.ToString()] = level;
+            }
+        }
+        
+        return metaData;
     }
     
     private SettingsData GetSettingsData()
@@ -141,13 +153,32 @@ public class SaveSystem : MonoBehaviour
         };
     }
     
+    public void SavePermanentUpgrades()
+    {
+        // For now, permanent upgrades are saved automatically via PlayerPrefs in PermanentUpgradeButton
+        // This method is here for consistency and future expansion
+        PlayerPrefs.Save();
+        Debug.Log("Permanent upgrades saved");
+    }
+    
     public void ApplyLoadedData(GameSaveData data)
     {
         // Apply currency
         CurrencyManager currencyManager = FindObjectOfType<CurrencyManager>();
-        if (currencyManager != null)
+        if (currencyManager != null && data.currency > 0)
         {
-            // Currency is loaded automatically via PlayerPrefs in CurrencyManager
+            currencyManager.SetTotalCurrency(data.currency);
+        }
+        
+        // Apply permanent upgrades to PlayerPrefs (for compatibility with existing system)
+        if (data.metaProgression?.permanentUpgradeLevels != null)
+        {
+            foreach (var upgrade in data.metaProgression.permanentUpgradeLevels)
+            {
+                string key = $"PermanentUpgrade_{upgrade.Key}";
+                PlayerPrefs.SetInt(key, upgrade.Value);
+            }
+            PlayerPrefs.Save();
         }
         
         // Apply settings
@@ -155,6 +186,8 @@ public class SaveSystem : MonoBehaviour
         
         // Apply statistics to PlayerPrefs
         ApplyStatistics(data.statistics);
+        
+        Debug.Log($"Applied loaded data: Currency={data.currency}, Upgrades={data.metaProgression?.permanentUpgradeLevels?.Count ?? 0}");
     }
     
     private void ApplySettings(SettingsData settings)
@@ -217,6 +250,12 @@ public class SaveSystem : MonoBehaviour
             SaveGameData();
         }
     }
+    
+    private void OnApplicationQuit()
+    {
+        Debug.Log("Application quitting - saving game data...");
+        SaveGameData();
+    }
 }
 
 [System.Serializable]
@@ -229,12 +268,84 @@ public class GameSaveData
 }
 
 [System.Serializable]
-public class MetaProgressionData
+public class MetaProgressionData : UnityEngine.ISerializationCallbackReceiver
 {
-    public System.Collections.Generic.List<string> permanentUpgrades;
+    [SerializeField] private System.Collections.Generic.List<UpgradeDataEntry> upgradeEntries;
     public System.Collections.Generic.List<string> unlockedTanks;
     public int totalGamesPlayed;
     public float bestSurvivalTime;
+    
+    [System.NonSerialized]
+    private System.Collections.Generic.Dictionary<string, int> _permanentUpgradeLevels;
+    
+    public System.Collections.Generic.Dictionary<string, int> permanentUpgradeLevels
+    {
+        get
+        {
+            if (_permanentUpgradeLevels == null)
+            {
+                _permanentUpgradeLevels = new System.Collections.Generic.Dictionary<string, int>();
+                if (upgradeEntries != null)
+                {
+                    foreach (var entry in upgradeEntries)
+                    {
+                        _permanentUpgradeLevels[entry.upgradeType] = entry.level;
+                    }
+                }
+            }
+            return _permanentUpgradeLevels;
+        }
+        set
+        {
+            _permanentUpgradeLevels = value;
+            upgradeEntries = new System.Collections.Generic.List<UpgradeDataEntry>();
+            if (_permanentUpgradeLevels != null)
+            {
+                foreach (var kvp in _permanentUpgradeLevels)
+                {
+                    upgradeEntries.Add(new UpgradeDataEntry { upgradeType = kvp.Key, level = kvp.Value });
+                }
+            }
+        }
+    }
+    
+    public MetaProgressionData()
+    {
+        upgradeEntries = new System.Collections.Generic.List<UpgradeDataEntry>();
+        unlockedTanks = new System.Collections.Generic.List<string>();
+        _permanentUpgradeLevels = new System.Collections.Generic.Dictionary<string, int>();
+    }
+    
+    public void OnBeforeSerialize()
+    {
+        if (_permanentUpgradeLevels != null)
+        {
+            upgradeEntries = new System.Collections.Generic.List<UpgradeDataEntry>();
+            foreach (var kvp in _permanentUpgradeLevels)
+            {
+                upgradeEntries.Add(new UpgradeDataEntry { upgradeType = kvp.Key, level = kvp.Value });
+            }
+        }
+    }
+    
+    public void OnAfterDeserialize()
+    {
+        _permanentUpgradeLevels = new System.Collections.Generic.Dictionary<string, int>();
+        if (upgradeEntries != null)
+        {
+            foreach (var entry in upgradeEntries)
+            {
+                _permanentUpgradeLevels[entry.upgradeType] = entry.level;
+            }
+        }
+    }
+}
+
+[System.Serializable]
+public class UpgradeDataEntry
+{
+    public string upgradeType;
+    public int level;
 }
 
 [System.Serializable]
