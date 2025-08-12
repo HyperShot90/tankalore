@@ -1,0 +1,26 @@
+Placeholder Art Assets Directory
+
+This folder should contain:
+- Tank sprites (player and various enemy types)
+- Bullet sprites
+- Boss sprites
+- Environmental sprites (walls, obstacles)
+- Explosion and effect sprites
+
+Recommended Sources:
+- Kenney.nl (Free game assets)
+  - Top-down Tanks Redux pack
+  - Space Shooter Redux pack
+  - Explosion effects pack
+
+Asset Requirements:
+- 2D sprites suitable for top-down view
+- Consistent art style and resolution
+- Transparent backgrounds (PNG format)
+- Square aspect ratio for tanks (64x64 or 128x128 recommended)
+
+For placeholder testing, create simple colored squares:
+- Player: Blue 64x64 square
+- Enemy: Red 64x64 square  
+- Boss: Dark Red 128x128 square
+- Bullet: White 8x8 square
