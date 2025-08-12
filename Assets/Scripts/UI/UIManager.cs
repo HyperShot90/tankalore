@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Tankalore.Contracts;
 
 public class UIManager : MonoBehaviour
 {

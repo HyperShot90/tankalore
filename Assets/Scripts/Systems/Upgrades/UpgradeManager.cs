@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Tankalore.Contracts;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -12,8 +13,9 @@ public class UpgradeManager : MonoBehaviour
     private List<UpgradeData> sessionUpgrades = new List<UpgradeData>();
     
     // Components
-    private PlayerController playerController;
-    private TankStats playerTankStats;
+    private IPlayerStats playerStats;
+    private IPlayerEvents playerEvents;
+    private IUpgradeableStats upgradeableStats;
     private XPSystem xpSystem;
     
     // Events
@@ -22,7 +24,15 @@ public class UpgradeManager : MonoBehaviour
     
     private void Awake()
     {
-        playerController = FindObjectOfType<PlayerController>();
+        // Find player components using interfaces
+        var playerController = FindObjectOfType<PlayerController>();
+        if (playerController != null)
+        {
+            playerStats = playerController;
+            playerEvents = playerController;
+            upgradeableStats = playerController.GetUpgradeableStats();
+        }
+        
         xpSystem = FindObjectOfType<XPSystem>();
     }
     
@@ -163,9 +173,9 @@ public class UpgradeManager : MonoBehaviour
     
     private void ApplyUpgradeEffect(UpgradeData upgrade)
     {
-        if (playerTankStats == null)
+        if (upgradeableStats == null)
         {
-            Debug.LogError("Player tank stats not found!");
+            Debug.LogError("Upgradeable stats not found!");
             return;
         }
         
@@ -181,32 +191,32 @@ public class UpgradeManager : MonoBehaviour
         switch (upgrade.upgradeType)
         {
             case UpgradeType.HealthBoost:
-                playerTankStats.healthMultiplier *= effectValue;
+                upgradeableStats.HealthMultiplier *= effectValue;
                 break;
             case UpgradeType.ArmorBoost:
-                playerTankStats.armorMultiplier *= effectValue;
+                upgradeableStats.ArmorMultiplier *= effectValue;
                 break;
             case UpgradeType.FirepowerBoost:
-                playerTankStats.firepowerMultiplier *= effectValue;
+                upgradeableStats.FirepowerMultiplier *= effectValue;
                 break;
             case UpgradeType.SpeedBoost:
-                playerTankStats.speedMultiplier *= effectValue;
+                upgradeableStats.SpeedMultiplier *= effectValue;
                 break;
             case UpgradeType.FireRateBoost:
-                playerTankStats.fireRateMultiplier *= effectValue;
+                upgradeableStats.FireRateMultiplier *= effectValue;
                 break;
             // Add more upgrade types as needed
         }
         
         // If it's a health boost, heal the player to the new max health
-        if (upgrade.upgradeType == UpgradeType.HealthBoost && playerController != null)
+        if (upgrade.upgradeType == UpgradeType.HealthBoost && playerStats != null)
         {
-            float newMaxHealth = playerTankStats.GetEffectiveHealth();
-            float currentHealthPercentage = playerController.GetHealthPercentage();
+            float newMaxHealth = upgradeableStats.GetEffectiveHealth();
+            float currentHealthPercentage = playerStats.GetHealthPercentage();
             float newCurrentHealth = newMaxHealth * currentHealthPercentage;
             
             // Set health to maintain the same percentage, but with new max
-            playerController.Heal(newCurrentHealth - (newMaxHealth * currentHealthPercentage));
+            playerStats.Heal(newCurrentHealth - (newMaxHealth * currentHealthPercentage));
         }
     }
     
@@ -226,14 +236,9 @@ public class UpgradeManager : MonoBehaviour
         sessionUpgrades.Clear();
         
         // Reset player stats multipliers
-        if (playerTankStats != null)
+        if (upgradeableStats != null)
         {
-            playerTankStats.ResetMultipliers();
+            upgradeableStats.ResetMultipliers();
         }
-    }
-    
-    public void SetPlayerTankStats(TankStats tankStats)
-    {
-        playerTankStats = tankStats;
     }
 }

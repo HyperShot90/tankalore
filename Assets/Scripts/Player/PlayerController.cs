@@ -1,7 +1,8 @@
 using UnityEngine;
+using Tankalore.Contracts;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerController : MonoBehaviour, IDamageable
+public class PlayerController : MonoBehaviour, IDamageable, IPlayerEvents, IPlayerStats
 {
     [Header("Tank Configuration")]
     [SerializeField] private TankStats tankStats;
@@ -161,5 +162,15 @@ public class PlayerController : MonoBehaviour, IDamageable
     public float GetHealthPercentage()
     {
         return currentHealth / tankStats.GetEffectiveHealth();
+    }
+    
+    public float GetMaxHealth()
+    {
+        return tankStats.GetEffectiveHealth();
+    }
+    
+    public IUpgradeableStats GetUpgradeableStats()
+    {
+        return tankStats;
     }
 }

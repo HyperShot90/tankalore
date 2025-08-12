@@ -2,7 +2,7 @@
     "name": "Player",
     "rootNamespace": "Tankalore.Player",
     "references": [
-        "Systems"
+        "Core.Contracts"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

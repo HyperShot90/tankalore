@@ -1,4 +1,5 @@
 using UnityEngine;
+using Tankalore.Contracts;
 
 public class SessionManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class SessionManager : MonoBehaviour
     private GameOverReason gameOverReason;
     
     // Components
-    private PlayerController playerController;
+    private IPlayerEvents playerEvents;
     private EnemySpawner enemySpawner;
     
     // Events
@@ -24,7 +25,12 @@ public class SessionManager : MonoBehaviour
     
     private void Awake()
     {
-        playerController = FindObjectOfType<PlayerController>();
+        var playerController = FindObjectOfType<PlayerController>();
+        if (playerController != null)
+        {
+            playerEvents = playerController;
+        }
+        
         enemySpawner = FindObjectOfType<EnemySpawner>();
     }
     
@@ -33,17 +39,17 @@ public class SessionManager : MonoBehaviour
         StartSession();
         
         // Subscribe to player death
-        if (playerController != null)
+        if (playerEvents != null)
         {
-            playerController.OnPlayerDied += HandlePlayerDeath;
+            playerEvents.OnPlayerDied += HandlePlayerDeath;
         }
     }
     
     private void OnDestroy()
     {
-        if (playerController != null)
+        if (playerEvents != null)
         {
-            playerController.OnPlayerDied -= HandlePlayerDeath;
+            playerEvents.OnPlayerDied -= HandlePlayerDeath;
         }
     }
     
